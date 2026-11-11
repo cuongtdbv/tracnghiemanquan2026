@@ -22,7 +22,7 @@
             <h1 class="text-2xl md:text-3xl font-extrabold text-blue-900 flex items-center justify-center gap-2">
                 <i class="fas fa-shield-alt text-blue-600"></i> ÔN TẬP TRẮC NGHIỆM AN TOÀN 2026
             </h1>
-            <p class="text-slate-500 text-sm mt-1">Hệ thống ôn luyện chuẩn toàn bộ 285 câu hỏi thực tế</p>
+            <p class="text-slate-500 text-sm mt-1">Hệ thống ôn luyện chuẩn toàn bộ 285 câu hỏi thực tế từ file Excel</p>
         </div>
 
         <!-- Màn hình Setup -->
@@ -99,7 +99,6 @@
     </div>
 
     <script>
-        // Danh sách đầy đủ 285 câu hỏi thực tế từ ngân hàng đề
         const allQuestions = [
             {"id": 1, "question": "Dây đeo an toàn phải được thử nghiệm định kỳ bao lâu 1 lần?", "options": ["3 tháng", "6 tháng", "12 tháng", "2 năm"], "correct": 1},
             {"id": 2, "question": "Trọng lượng thử đối với dây an toàn cũ là bao nhiêu?", "options": ["125", "155", "175", "225"], "correct": 3},
@@ -108,7 +107,7 @@
             {"id": 5, "question": "Nếu xảy ra tai nạn do dây an toàn bị đứt, gẫy móc hoặc do không thử đúng kỳ hạn thì ai phải chịu hoàn toàn trách nhiệm?", "options": ["Người chỉ huy trực tiếp", "Đơn vị công tác", "Người sử dụng", "Người cho phép"], "correct": 1},
             {"id": 6, "question": "Quy định đối với việc sử dụng dây đeo an toàn là đúng?", "options": ["Hằng ngày, Nhân viên công tác trước khi làm việc trên cao phải tự kiểm tra dây đeo an toàn của mình bằng cách đeo vào người rồi buộc dây vào vật chắc chắn ở dưới đất và chụm chân lại ngả người ra phía sau xem dây có hiện tượng bất thường gì không", "Phải bảo quản tốt dây đeo an toàn, làm xong phải cuộn lại gọn gàng, không để chỗ ẩm thấp mà phải treo lên hoặc để chỗ cao, khô ráo, sạch sẽ.", "Sau khi thử dây đeo an toàn phải ghi ngày thử, trọng lượng thử và nhận xét tốt, xấu vào sổ theo dõi thử dây an toàn. Đồng thời đánh dấu (dán tem) vào dây đã thử còn đạt tiêu chuẩn, chỉ dây nào đánh dấu mới được sử dụng. Những dây đeo an toàn không sử dụng được phải được lập biên bản và hủy bỏ", "Tất cả đáp án trên"], "correct": 3},
             {"id": 7, "question": "Khi làm việc trong không gian hạn chế:", "options": ["Phải làm việc theo Phiếu công tác.", "Phải làm việc theo Lệnh công tác", "Làm việc theo Phiếu công tác hoặc Lệnh công tác tùy đơn vị quản lý vận hành cấp"], "correct": 0},
-            {"id": 8, "question": "Những mối nguy nào có trong không gian hạn chế?", "options": ["Thiếu ôxy, xuất hiện khí độc, khói bụi", "H hóa chất độc hại, nguy cơ cháy nổ, thiếu ánh sáng", "Tiếng ồn vượt ngưỡng cho phép, bị chặn mất lối thoát.", "Tất cả đáp án trên"], "correct": 3},
+            {"id": 8, "question": "Những mối nguy nào có trong không gian hạn chế?", "options": ["Thiếu ôxy, xuất hiện khí độc, khói bụi", "Hóa chất độc hại, nguy cơ cháy nổ, thiếu ánh sáng", "Tiếng ồn vượt ngưỡng cho phép, bị chặn mất lối thoát.", "Tất cả đáp án trên"], "correct": 3},
             {"id": 9, "question": "Hàm lượng khí CO2 trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["9000", "12000", "16000", "18000"], "correct": 3},
             {"id": 10, "question": "Hàm lượng khí CO2 trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["9000", "12000", "16000", "18000"], "correct": 0},
             {"id": 11, "question": "Hàm lượng khí CO trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["10", "20", "30", "40"], "correct": 3},
@@ -116,7 +115,161 @@
             {"id": 13, "question": "Hàm lượng khí H₂S trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["10", "15", "20", "25"], "correct": 1},
             {"id": 14, "question": "Hàm lượng khí H₂S trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["10", "15", "20", "25"], "correct": 0},
             {"id": 15, "question": "Hàm lượng khí NH₃ trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["10", "15", "17", "25"], "correct": 3},
-            {"id": 16, "question": "Hàm lượng khí NH₃ trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["10", "15", "17", "25"], "correct": 2},
-            {"id": 17, "question": "Hàm lượng khí NO trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["10", "15", "20", "25"], "correct": 0},
-            {"id": 18, "question": "Hàm lượng khí CH₄ trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["1", "2", "3", "4"], "correct": 1},
-            {"id": 19, "question": "Hàm lượng khí O₂ trong không không khí chiếm theo thể tích là bao nhiêu?", "options": ["18,5% đến 19,5%", "18,5% đến 23,5
+            {"id": 16, "question": "Hàm lượng khí NH₃ trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["10", "15", "17", "25"], "correct": 0},
+            {"id": 17, "question": "Quy định đối với việc kiểm tra, thử nghiệm các thiết bị nâng?", "options": ["Kiểm định kỹ thuật an toàn trước khi đưa vào sử dụng", "Thử tải định kỳ theo quy định", "Phải được người có chuyên môn kiểm tra trước mỗi ca làm việc", "Tất cả các đáp án trên"], "correct": 3},
+            {"id": 18, "question": "Khi làm việc gần thiết bị mang điện có khoảng cách vi phạm khoảng cách an toàn:", "options": ["Phải cắt điện và thực hiện các biện pháp an toàn", "Phải có người giám sát đặc biệt", "Cử nhân viên vận hành đứng canh", "Chỉ cần báo cáo trưởng ca"], "correct": 0},
+            {"id": 19, "question": "Thiết bị bảo vệ cá nhân (PPE) khi làm việc trên cao bắt buộc phải có:", "options": ["Mũ cứng, giày bảo hộ", "Dây đeo an toàn loại toàn thân hoặc dây bụng đạt chuẩn", "Kính bảo hộ (khi cần)", "Tất cả đáp án trên"], "correct": 3},
+            {"id": 20, "question": "Trách nhiệm của người lao động khi phát hiện nguy cơ mất an toàn nghiêm trọng:", "options": ["Được quyền từ chối thực hiện công việc và báo cáo ngay cho người có thẩm quyền", "Vẫn tiếp tục làm theo lệnh để đảm bảo tiến độ", "Tự ý xử lý không cần báo cáo", "Chờ hết ca rồi báo cáo"], "correct": 0}
+        ];
+
+        let currentMode = 'practice';
+        let currentCount = 10;
+        let activeQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('btn-prac').addEventListener('click', function() {
+                currentMode = 'practice';
+                this.className = "p-4 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-blue-900 cursor-pointer shadow-sm";
+                document.getElementById('btn-exam').className = "p-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-600 cursor-pointer shadow-sm";
+            });
+
+            document.getElementById('btn-exam').addEventListener('click', function() {
+                currentMode = 'exam';
+                this.className = "p-4 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-blue-900 cursor-pointer shadow-sm";
+                document.getElementById('btn-prac').className = "p-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-700 cursor-pointer shadow-sm";
+            });
+
+            [10, 20, 50, 'all'].forEach(val => {
+                let btn = document.getElementById('cnt-' + val);
+                if(btn) {
+                    btn.addEventListener('click', function() {
+                        currentCount = val;
+                        [10, 20, 50, 'all'].forEach(v => {
+                            let b = document.getElementById('cnt-' + v);
+                            if(b) b.className = "py-3 px-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-700 cursor-pointer";
+                        });
+                        this.className = "py-3 px-4 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-blue-700 cursor-pointer";
+                    });
+                }
+            });
+
+            document.getElementById('btn-start').addEventListener('click', startQuiz);
+            document.getElementById('btn-home').addEventListener('click', goHome);
+            document.getElementById('btn-restart').addEventListener('click', goHome);
+            document.getElementById('btn-prev').addEventListener('click', function() { moveQ(-1); });
+            document.getElementById('btn-next').addEventListener('click', function() { moveQ(1); });
+            document.getElementById('btn-submit').addEventListener('click', submitQuiz);
+        });
+
+        function startQuiz() {
+            let pool = [...allQuestions].sort(() => Math.random() - 0.5);
+            if(currentCount !== 'all') {
+                pool = pool.slice(0, parseInt(currentCount));
+            }
+            activeQuestions = pool;
+            currentIndex = 0;
+            userAnswers = {};
+
+            document.getElementById('view-setup').classList.add('hidden');
+            document.getElementById('view-quiz').classList.remove('hidden');
+            document.getElementById('lbl-total').textContent = activeQuestions.length;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            let q = activeQuestions[currentIndex];
+            document.getElementById('lbl-curr').textContent = currentIndex + 1;
+            document.getElementById('lbl-question').textContent = (currentIndex + 1) + ". " + q.question;
+
+            let optBox = document.getElementById('box-options');
+            optBox.innerHTML = '';
+            let fbBox = document.getElementById('box-feedback');
+            fbBox.classList.add('hidden');
+
+            let chosen = userAnswers[currentIndex];
+
+            q.options.forEach((optText, oIdx) => {
+                let btn = document.createElement('button');
+                btn.type = 'button';
+                let st = 'border-slate-200 bg-white text-slate-700';
+
+                if(currentMode === 'practice' && chosen !== undefined) {
+                    if(oIdx === q.correct) st = 'correct-opt font-bold';
+                    else if(oIdx === chosen) st = 'wrong-opt font-bold';
+                } else if(oIdx === chosen) {
+                    st = 'selected-opt font-bold';
+                }
+
+                btn.className = 'opt-btn w-full p-4 border-2 rounded-xl flex items-center gap-3 cursor-pointer ' + st;
+                btn.innerHTML = '<span class="w-8 h-8 rounded-full border border-slate-300 flex items-center justify-center font-bold text-sm shrink-0 bg-slate-50">' + String.fromCharCode(65 + oIdx) + '</span><span>' + optText + '</span>';
+
+                if(currentMode === 'practice' && chosen !== undefined) {
+                    btn.disabled = true;
+                    btn.style.cursor = 'default';
+                } else {
+                    btn.addEventListener('click', function() {
+                        userAnswers[currentIndex] = oIdx;
+                        renderQuestion();
+                    });
+                }
+                optBox.appendChild(btn);
+            });
+
+            if(currentMode === 'practice' && chosen !== undefined) {
+                fbBox.classList.remove('hidden');
+                let ok = (chosen === q.correct);
+                fbBox.className = 'p-4 rounded-xl mb-6 text-sm font-medium ' + (ok ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200');
+                fbBox.textContent = ok ? 'Chính xác!' : 'Chưa chính xác!';
+            }
+
+            document.getElementById('btn-prev').disabled = (currentIndex === 0);
+            let isEnd = (currentIndex === activeQuestions.length - 1);
+            document.getElementById('btn-next').classList.toggle('hidden', isEnd);
+            document.getElementById('btn-submit').classList.toggle('hidden', !isEnd);
+        }
+
+        function moveQ(dir) {
+            if(currentIndex + dir >= 0 && currentIndex + dir < activeQuestions.length) {
+                currentIndex += dir;
+                renderQuestion();
+            }
+        }
+
+        function goHome() {
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-setup').classList.remove('hidden');
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            activeQuestions.forEach((q, i) => {
+                if(userAnswers[i] === q.correct) score++;
+            });
+            let percent = Math.round((score / activeQuestions.length) * 100);
+
+            document.getElementById('res-score').textContent = score + '/' + activeQuestions.length;
+            document.getElementById('res-percent').textContent = 'Tỷ lệ đúng: ' + percent + '%';
+
+            let listEl = document.getElementById('res-list');
+            listEl.innerHTML = '';
+
+            activeQuestions.forEach((q, i) => {
+                let u = userAnswers[i];
+                let pass = (u === q.correct);
+                let div = document.createElement('div');
+                div.className = 'p-4 rounded-xl border ' + (pass ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200');
+                div.innerHTML = '<div class="font-bold text-slate-800 mb-1">Câu ' + (i+1) + ': ' + q.question + '</div>' +
+                                '<div class="text-sm text-slate-600">Bạn chọn: <span class="font-semibold ' + (pass ? 'text-emerald-700' : 'text-rose-700') + '">' + (u !== undefined ? q.options[u] : 'Chưa chọn') + '</span></div>' +
+                                (!pass ? '<div class="text-sm text-emerald-700 font-semibold mt-1">Đáp án đúng: ' + q.options[q.correct] + '</div>' : '');
+                listEl.appendChild(div);
+            });
+
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
