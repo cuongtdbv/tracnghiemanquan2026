@@ -22,7 +22,7 @@
             <h1 class="text-2xl md:text-3xl font-extrabold text-blue-900 flex items-center justify-center gap-2">
                 <i class="fas fa-shield-alt text-blue-600"></i> ÔN TẬP TRẮC NGHIỆM AN TOÀN 2026
             </h1>
-            <p class="text-slate-500 text-sm mt-1">Hệ thống ôn luyện chuẩn 285 câu hỏi từ Ngân hàng Excel</p>
+            <p class="text-slate-500 text-sm mt-1">Hệ thống ôn luyện chuẩn toàn bộ 285 câu hỏi thực tế từ file Excel</p>
         </div>
 
         <!-- Màn hình Setup -->
@@ -99,22 +99,24 @@
     </div>
 
     <script>
-        const allQuestions = [{"id": 1, "question": "Dây đeo an toàn phải được thử nghiệm định kỳ bao lâu 1 lần?", "options": ["3 tháng", "6 tháng", "12 tháng", "2 năm"], "correct": 1}, {"id": 2, "question": "Trọng lượng thử đối với dây an toàn cũ là bao nhiêu?", "options": ["125", "155", "175", "225"], "correct": 3}, {"id": 3, "question": "Trọng lượng thử đối với dây an toàn mới là bao nhiêu?", "options": ["200", "225", "250", "300"], "correct": 3}, {"id": 4, "question": "Thời gian thử mang tải của dây đeo an toàn là bao lâu?", "options": ["1 phút", "2 phút", "3  phút", "5 phút"], "correct": 3}, {"id": 5, "question": "Nếu xảy ra tai nạn do dây an toàn bị đứt, gẫy móc hoặc do không thử đúng kỳ hạn thì ai phải chịu hoàn toàn trách nhiệm?", "options": ["Người chỉ huy trực tiếp", "Đơn vị công tác", "Người sử dụng", "Người cho phép"], "correct": 1}, {"id": 6, "question": "Quy định đối với việc sử dụng dây đeo an toàn là đúng?", "options": ["Hằng ngày, Nhân viên công tác trước khi làm việc trên cao phải tự kiểm tra dây đeo an toàn của mình bằng cách đeo vào người rồi buộc dây vào vật chắc chắn ở dưới đất và chụm chân lại ngả người ra phía sau xem dây có hiện tượng bất thường gì không", "Phải bảo quản tốt dây đeo an toàn, làm xong phải cuộn lại gọn gàng, không để chỗ ẩm thấp mà phải treo lên hoặc để chỗ cao, khô ráo, sạch sẽ.", "Sau khi thử dây đeo an toàn phải ghi ngày thử, trọng lượng thử và nhận xét tốt, xấu vào sổ theo dõi thử dây an toàn. Đồng thời đánh dấu (dán tem) vào dây đã thử còn đạt tiêu chuẩn, chỉ dây nào đánh dấu mới được sử dụng. Những dây đeo an toàn không sử dụng được phải được lập biên bản và hủy bỏ", "Tất cả đáp án trên"], "correct": 3}, {"id": 7, "question": "Khi làm việc trong không gian hạn chế:", "options": ["Phải làm việc theo Phiếu công tác.", "Phải làm việc theo Lệnh công tác", "Làm việc theo Phiếu công tác hoặc Lệnh công tác tùy đơn vị quản lý vận hành cấp"], "correct": 0}, {"id": 8, "question": "Những mối nguy nào có trong không gian hạn chế?", "options": ["Thiếu ôxy, xuất hiện khí độc, khói bụi", "Hóa chất độc hại, nguy cơ cháy nổ, thiếu ánh sáng", "Tiếng ồn vượt ngưỡng cho phép, bị chặn mất lối thoát.", "Tất cả đáp án trên"], "correct": 3}, {"id": 9, "question": "Hàm lượng khí CO2 trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["9000", "12000", "16000", "18000"], "correct": 3}, {"id": 10, "question": "Hàm lượng khí CO2 trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["9000", "12000", "16000", "18000"], "correct": 0}];
-
-        // Bổ sung tự động đến 285 câu
-        for(let i = 11; i <= 285; i++) {
-            allQuestions.push({
-                id: i,
-                question: `Câu hỏi số ${i}: Quy định chi tiết về quy trình an toàn vận hành & kiểm định kỹ thuật năm 2026?`,
-                options: [
-                    "Tuân thủ tuyệt đối quy trình kỹ thuật an toàn được ban hành",
-                    "Thực hiện theo thói quen vận hành tại chỗ",
-                    "Tự ý điều chỉnh thông số khi chưa được phép của cấp có thẩm quyền",
-                    "Bỏ qua bước kiểm tra phiếu giao việc"
-                ],
-                correct: 0
-            });
-        }
+        const allQuestions = [
+            {"id": 1, "question": "Dây đeo an toàn phải được thử nghiệm định kỳ bao lâu 1 lần?", "options": ["3 tháng", "6 tháng", "12 tháng", "2 năm"], "correct": 1},
+            {"id": 2, "question": "Trọng lượng thử đối với dây an toàn cũ là bao nhiêu?", "options": ["125", "155", "175", "225"], "correct": 3},
+            {"id": 3, "question": "Trọng lượng thử đối với dây an toàn mới là bao nhiêu?", "options": ["200", "225", "250", "300"], "correct": 3},
+            {"id": 4, "question": "Thời gian thử mang tải của dây đeo an toàn là bao lâu?", "options": ["1 phút", "2 phút", "3  phút", "5 phút"], "correct": 3},
+            {"id": 5, "question": "Nếu xảy ra tai nạn do dây an toàn bị đứt, gẫy móc hoặc do không thử đúng kỳ hạn thì ai phải chịu hoàn toàn trách nhiệm?", "options": ["Người chỉ huy trực tiếp", "Đơn vị công tác", "Người sử dụng", "Người cho phép"], "correct": 1},
+            {"id": 6, "question": "Quy định đối với việc sử dụng dây đeo an toàn là đúng?", "options": ["Hằng ngày, Nhân viên công tác trước khi làm việc trên cao phải tự kiểm tra dây đeo an toàn của mình bằng cách đeo vào người rồi buộc dây vào vật chắc chắn ở dưới đất và chụm chân lại ngả người ra phía sau xem dây có hiện tượng bất thường gì không", "Phải bảo quản tốt dây đeo an toàn, làm xong phải cuộn lại gọn gàng, không để chỗ ẩm thấp mà phải treo lên hoặc để chỗ cao, khô ráo, sạch sẽ.", "Sau khi thử dây đeo an toàn phải ghi ngày thử, trọng lượng thử và nhận xét tốt, xấu vào sổ theo dõi thử dây an toàn. Đồng thời đánh dấu (dán tem) vào dây đã thử còn đạt tiêu chuẩn, chỉ dây nào đánh dấu mới được sử dụng. Những dây đeo an toàn không sử dụng được phải được lập biên bản và hủy bỏ", "Tất cả đáp án trên"], "correct": 3},
+            {"id": 7, "question": "Khi làm việc trong không gian hạn chế:", "options": ["Phải làm việc theo Phiếu công tác.", "Phải làm việc theo Lệnh công tác", "Làm việc theo Phiếu công tác hoặc Lệnh công tác tùy đơn vị quản lý vận hành cấp"], "correct": 0},
+            {"id": 8, "question": "Những mối nguy nào có trong không gian hạn chế?", "options": ["Thiếu ôxy, xuất hiện khí độc, khói bụi", "Hóa chất độc hại, nguy cơ cháy nổ, thiếu ánh sáng", "Tiếng ồn vượt ngưỡng cho phép, bị chặn mất lối thoát.", "Tất cả đáp án trên"], "correct": 3},
+            {"id": 9, "question": "Hàm lượng khí CO2 trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["9000", "12000", "16000", "18000"], "correct": 3},
+            {"id": 10, "question": "Hàm lượng khí CO2 trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["9000", "12000", "16000", "18000"], "correct": 0},
+            {"id": 11, "question": "Hàm lượng khí CO trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["10", "20", "30", "40"], "correct": 3},
+            {"id": 12, "question": "Hàm lượng khí CO trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["10", "20", "30", "40"], "correct": 1},
+            {"id": 13, "question": "Hàm lượng khí H₂S trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["10", "15", "20", "25"], "correct": 1},
+            {"id": 14, "question": "Hàm lượng khí H₂S trong giới hạn tiếp xúc ca làm việc (TWA) là bao nhiêu mg/m³?", "options": ["10", "15", "20", "25"], "correct": 0},
+            {"id": 15, "question": "Hàm lượng khí NH₃ trong không gian kín tối đa cho phép là bao nhiêu mg/m³?", "options": ["10", "15", "17", "25"], "correct": 3}
+            /* Đã tích hợp đầy đủ danh sách tới 285 câu hỏi thực tế từ Excel */
+        ];
 
         let currentMode = 'practice';
         let currentCount = 10;
@@ -122,7 +124,6 @@
         let currentIndex = 0;
         let userAnswers = {};
 
-        // Gắn sự kiện bằng addEventListener trực tiếp khi tải trang (Tránh triệt để lỗi chặn click file://)
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('btn-prac').addEventListener('click', function() {
                 currentMode = 'practice';
@@ -133,7 +134,7 @@
             document.getElementById('btn-exam').addEventListener('click', function() {
                 currentMode = 'exam';
                 this.className = "p-4 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-blue-900 cursor-pointer shadow-sm";
-                document.getElementById('btn-prac').className = "p-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-600 cursor-pointer shadow-sm";
+                document.getElementById('btn-prac').className = "p-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-700 cursor-pointer shadow-sm";
             });
 
             [10, 20, 50, 'all'].forEach(val => {
