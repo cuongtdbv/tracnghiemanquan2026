@@ -3,326 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phần Mềm Ôn Tập Trắc Nghiệm An Toàn 2026</title>
+    <title>Trắc Nghiệm An Toàn 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .option-label { cursor: pointer; transition: all 0.2s ease; }
-        .option-label:hover { background-color: #f8fafc; border-color: #94a3b8; }
-        .option-selected { border-color: #2563eb !important; background-color: #eff6ff !important; }
-        .correct-answer { background-color: #dcfce7 !important; border-color: #16a34a !important; color: #15803d !important; }
-        .wrong-answer { background-color: #fee2e2 !important; border-color: #dc2626 !important; color: #b91c1c !important; }
+        .opt-btn { transition: all 0.2s; text-align: left; }
+        .opt-btn:hover { background-color: #f1f5f9; border-color: #64748b; }
+        .selected-opt { border-color: #2563eb !important; background-color: #eff6ff !important; color: #1e40af !important; }
+        .correct-opt { background-color: #dcfce7 !important; border-color: #16a34a !important; color: #15803d !important; }
+        .wrong-opt { background-color: #fee2e2 !important; border-color: #dc2626 !important; color: #b91c1c !important; }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen font-sans text-slate-800">
-    <div class="max-w-4xl mx-auto p-4 md:p-6">
+<body class="bg-slate-100 min-h-screen font-sans text-slate-800 p-4 md:p-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        
         <!-- Header -->
-        <header class="bg-white rounded-xl shadow-md p-6 mb-6 text-center border-b-4 border-blue-600">
-            <h1 class="text-2xl md:text-3xl font-bold text-blue-900 flex items-center justify-center gap-3">
-                <i class="fas fa-shield-alt text-blue-600"></i>
-                ÔN TẬP TRẮC NGHIỆM AN TOÀN NĂM 2026
+        <div class="text-center pb-6 mb-6 border-b border-slate-200">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-blue-900 flex items-center justify-center gap-2">
+                <i class="fas fa-shield-alt text-blue-600"></i> ÔN TẬP TRẮC NGHIỆM AN TOÀN 2026
             </h1>
-            <p class="text-slate-600 mt-2">Hệ thống luyện tập & kiểm tra kiến thức an toàn lao động</p>
-        </header>
-
-        <!-- Setup Screen -->
-        <div id="setup-screen" class="bg-white rounded-xl shadow-md p-6 md:p-8">
-            <h2 class="text-xl font-bold text-slate-800 mb-6 border-b pb-3 flex items-center gap-2">
-                <i class="fas fa-sliders-h text-blue-600"></i> Tùy Chỉnh Chế Độ Học Tập
-            </h2>
-
-            <!-- Mode Selection -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div id="card-practice" onclick="setMode('practice')" class="border-2 border-blue-500 bg-blue-50/30 rounded-xl p-5 cursor-pointer transition-all">
-                    <div class="flex items-center gap-3 mb-3">
-                        <input type="radio" name="mode" id="rad-practice" checked class="w-5 h-5 text-blue-600 pointer-events-none">
-                        <span class="font-bold text-lg text-slate-800">Chế độ Ôn Luyện</span>
-                    </div>
-                    <p class="text-slate-600 text-sm pl-8">- Xem đáp án và giải thích ngay.<br>- Không giới hạn thời gian.</p>
-                </div>
-                <div id="card-exam" onclick="setMode('exam')" class="border-2 border-slate-200 bg-slate-50 rounded-xl p-5 cursor-pointer transition-all">
-                    <div class="flex items-center gap-3 mb-3">
-                        <input type="radio" name="mode" id="rad-exam" class="w-5 h-5 text-blue-600 pointer-events-none">
-                        <span class="font-bold text-lg text-slate-800">Chế độ Thi Thử</span>
-                    </div>
-                    <p class="text-slate-600 text-sm pl-8">- Có tính thời gian.<br>- Chỉ hiện kết quả sau khi nộp bài.</p>
-                </div>
-            </div>
-
-            <!-- Question Count -->
-            <div class="mb-8">
-                <label class="block font-bold text-slate-700 mb-2">Số lượng câu hỏi:</label>
-                <div class="flex flex-wrap gap-4">
-                    <button type="button" id="btn-c-10" onclick="setCount(10)" class="count-btn px-5 py-2.5 rounded-lg border-2 border-blue-600 font-semibold bg-blue-50 text-blue-600">10 câu</button>
-                    <button type="button" id="btn-c-20" onclick="setCount(20)" class="count-btn px-5 py-2.5 rounded-lg border-2 border-slate-300 font-semibold text-slate-700">20 câu</button>
-                    <button type="button" id="btn-c-50" onclick="setCount(50)" class="count-btn px-5 py-2.5 rounded-lg border-2 border-slate-300 font-semibold text-slate-700">50 câu</button>
-                    <button type="button" id="btn-c-all" onclick="setCount('all')" class="count-btn px-5 py-2.5 rounded-lg border-2 border-slate-300 font-semibold text-slate-700">Toàn bộ (285 câu)</button>
-                </div>
-            </div>
-
-            <button type="button" onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-lg cursor-pointer">
-                <i class="fas fa-play"></i> BẮT ĐẦU ÔN TẬP
-            </button>
+            <p class="text-slate-500 text-sm mt-1">Hệ thống ôn luyện chuẩn 285 câu hỏi từ Ngân hàng Excel</p>
         </div>
 
-        <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden bg-white rounded-xl shadow-md p-6 md:p-8">
-            <div class="flex flex-wrap justify-between items-center pb-4 mb-6 border-b gap-4">
-                <div class="flex items-center gap-2 text-slate-600 font-medium">
-                    <span>Câu hỏi:</span>
-                    <span id="current-q-num" class="font-bold text-blue-600 text-lg">1</span> / <span id="total-q-num" class="font-bold">10</span>
-                </div>
-                <div id="timer-box" class="hidden flex items-center gap-2 bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full font-bold border border-amber-200">
-                    <i class="fas fa-clock"></i> <span id="timer">00:00</span>
-                </div>
-                <button type="button" onclick="exitQuiz()" class="text-sm text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1 cursor-pointer">
-                    <i class="fas fa-sign-out-alt"></i> Thoát
-                </button>
-            </div>
-
+        <!-- Màn hình Setup -->
+        <div id="view-setup">
             <div class="mb-6">
-                <h3 id="question-text" class="text-lg md:text-xl font-bold text-slate-800 leading-relaxed mb-6"></h3>
-                <div id="options-container" class="space-y-3"></div>
-            </div>
-
-            <div id="explanation-box" class="hidden p-4 rounded-xl mb-6 border text-sm leading-relaxed">
-                <div class="font-bold mb-1 flex items-center gap-2"><i class="fas fa-info-circle"></i> Giải thích chi tiết:</div>
-                <div id="explanation-text"></div>
-            </div>
-
-            <div class="flex justify-between items-center pt-4 border-t">
-                <button type="button" id="prev-btn" onclick="prevQ()" class="px-5 py-2.5 rounded-lg border-2 border-slate-300 font-bold text-slate-600 hover:bg-slate-100 transition cursor-pointer">
-                    <i class="fas fa-arrow-left mr-2"></i> Câu trước
-                </button>
-                <button type="button" id="next-btn" onclick="nextQ()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition shadow cursor-pointer">
-                    Câu tiếp <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-                <button type="button" id="submit-btn" onclick="submitQuiz()" class="hidden px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg transition shadow cursor-pointer">
-                    Nộp bài <i class="fas fa-check-circle ml-2"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Result Screen -->
-        <div id="result-screen" class="hidden bg-white rounded-xl shadow-md p-6 md:p-8 text-center">
-            <div class="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-                <i class="fas fa-trophy"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-slate-800 mb-2">Hoàn Thành Bài Tập!</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-md mx-auto mb-8">
-                <div class="bg-slate-50 p-4 rounded-xl border">
-                    <div class="text-slate-500 text-xs font-bold uppercase mb-1">Điểm Số</div>
-                    <div id="score-text" class="text-3xl font-extrabold text-blue-600">0/0</div>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-xl border">
-                    <div class="text-slate-500 text-xs font-bold uppercase mb-1">Tỷ Lệ Đúng</div>
-                    <div id="percentage-text" class="text-3xl font-extrabold text-emerald-600">0%</div>
-                </div>
-                <div class="bg-slate-50 p-4 rounded-xl border">
-                    <div class="text-slate-500 text-xs font-bold uppercase mb-1">Thời Gian</div>
-                    <div id="time-taken-text" class="text-3xl font-extrabold text-amber-600">00:00</div>
+                <label class="block font-bold text-slate-700 mb-2">1. Chọn chế độ:</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <button type="button" id="btn-prac" onclick="setMode('practice')" class="p-4 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-blue-900 cursor-pointer shadow-sm">
+                        <i class="fas fa-book-open mr-1"></i> Ôn Luyện (Xem đáp án ngay)
+                    </button>
+                    <button type="button" id="btn-exam" onclick="setMode('exam')" class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-600 cursor-pointer shadow-sm">
+                        <i class="fas fa-clock mr-1"></i> Thi Thử (Nộp bài mới xem kết quả)
+                    </button>
                 </div>
             </div>
-            <div class="text-left mb-8 border-t pt-6">
-                <h3 class="text-lg font-bold text-slate-800 mb-4">Chi tiết bài làm:</h3>
-                <div id="review-list" class="space-y-4"></div>
+
+            <div class="mb-8">
+                <label class="block font-bold text-slate-700 mb-2">2. Số lượng câu hỏi:</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <button type="button" id="cnt-10" onclick="setCount(10)" class="py-3 px-4 rounded-xl border-2 border-blue-600 bg-blue-50 font-bold text-blue-700 cursor-pointer">10 câu</button>
+                    <button type="button" id="cnt-20" onclick="setCount(20)" class="py-3 px-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-700 cursor-pointer">20 câu</button>
+                    <button type="button" id="cnt-50" onclick="setCount(50)" class="py-3 px-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-700 cursor-pointer">50 câu</button>
+                    <button type="button" id="cnt-all" onclick="setCount('all')" class="py-3 px-4 rounded-xl border-2 border-slate-200 bg-slate-50 font-bold text-slate-700 cursor-pointer">Toàn bộ (285 câu)</button>
+                </div>
             </div>
-            <button type="button" onclick="resetToSetup()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow cursor-pointer">
-                <i class="fas fa-redo mr-2"></i> Ôn lại từ đầu
+
+            <button type="button" onclick="startQuiz()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg cursor-pointer">
+                <i class="fas fa-play mr-2"></i> BẮT ĐẦU ÔN TẬP
             </button>
         </div>
-    </div>
 
-    <script>
-        const questionBank = [
-            { id: 1, question: "Dây đeo an toàn phải được thử nghiệm định kỳ bao lâu 1 lần?", options: ["3 tháng", "6 tháng", "12 tháng", "2 năm"], correct: 1, explanation: "Theo quy định an toàn, dây đeo an toàn phải được thử nghiệm định kỳ 6 tháng một lần." },
-            { id: 2, question: "Trọng lượng thử đối với dây an toàn cũ là bao nhiêu?", options: ["125", "155", "175", "225"], correct: 3, explanation: "Trọng lượng thử tĩnh đối với dây an toàn cũ là 225 kg." },
-            { id: 3, question: "Trọng lượng thử đối với dây an toàn mới là bao nhiêu?", options: ["200", "225", "250", "300"], correct: 2, explanation: "Trọng lượng thử tĩnh đối với dây an toàn mới là 250 kg." },
-            { id: 4, question: "Thời gian thử mang tải của dây đeo an toàn là bao lâu?", options: ["2 phút", "3 phút", "4 phút", "5 phút"], correct: 3, explanation: "Thời gian thử mang tải bắt buộc là 5 phút." },
-            { id: 5, question: "Nếu xảy ra tai nạn do dây an toàn bị đứt, gẫy móc hoặc do không thử đúng kỳ hạn thì ai phải chịu hoàn toàn trách nhiệm?", options: ["Người lao động", "Người giao việc và người sử dụng", "Nhà sản xuất", "Cán bộ y tế"], correct: 1, explanation: "Người giao việc và người sử dụng chịu trách nhiệm kiểm tra thiết bị trước khi giao." },
-            { id: 6, question: "Quy định đối với việc sử dụng dây đeo an toàn là đúng?", options: ["Móc dây vào vị trí bất kỳ", "Không cần kiểm tra trước khi dùng", "Phải móc chắc chắn vào kết cấu cố định, vững chắc phía trên", "Chỉ dùng khi làm việc dưới đất"], correct: 2, explanation: "Dây an toàn bắt buộc phải được móc chắc chắn vào kết cấu vững chắc ở phía trên." },
-            { id: 7, question: "Khi làm việc trong không gian hạn chế:", options: ["Phải kiểm tra nồng độ khí độc, oxy và thông gió trước khi vào", "Có thể vào ngay nếu thấy sạch", "Không cần người giám sát bên ngoài", "Chỉ cần đeo khẩu trang vải thông thường"], correct: 0, explanation: "Không gian hạn chế tiềm ẩn khí độc và thiếu oxy, bắt buộc đo khí và thông gió." },
-            { id: 8, question: "Thiết bị điện cầm tay khi sử dụng ngoài trời hoặc nơi ẩm ướt cần đảm bảo điều kiện gì?", options: ["Có thiết bị chống giật (ELCB/RCD) và vỏ cách điện tốt", "Cắm điện trực tiếp không qua bảo vệ", "Dùng dây điện trần cho nhẹ", "Không cần quan tâm độ ẩm"], correct: 0, explanation: "Môi trường ẩm ướt nguy cơ điện giật cao, bắt buộc có thiết bị chống dòng rò và cách điện an toàn." },
-            { id: 9, question: "Khi phát hiện thiết bị nâng hạ (cần cẩu, pa-lăng) có tiếng kêu lạ hoặc rạn nứt móc cẩu, thợ vận hành phải làm gì?", options: ["Tiếp tục cố gắng hoàn thành ca", "Dừng ngay thiết bị, báo cáo người có trách nhiệm", "Tự ý dùng búa gõ lại", "Tăng tải để kiểm tra thêm"], correct: 1, explanation: "Phải dừng ngay thiết bị khi có dấu hiệu bất thường để đảm bảo an toàn tuyệt đối." },
-            { id: 10, question: "Biển báo an toàn hình tam giác đều, viền đen, nền vàng, hình vẽ màu đen có ý nghĩa gì?", options: ["Biển báo cấm", "Biển báo cảnh báo nguy hiểm", "Biển hiệu lệnh", "Biển chỉ dẫn"], correct: 1, explanation: "Biển tam giác nền vàng là biển cảnh báo nguy hiểm." },
-            ...Array.from({ length: 275 }, (_, i) => ({
-                id: i + 11,
-                question: `Câu hỏi quy định an toàn vận hành kỹ thuật số ${i + 11} theo tài liệu năm 2026:`,
-                options: [
-                    "Tuân thủ nghiêm ngặt theo quy trình kỹ thuật an toàn nhà máy",
-                    "Thực hiện theo kinh nghiệm cá nhân mà không cần quy trình",
-                    "Tự ý thay đổi kết cấu thiết bị khi chưa được phép",
-                    "Bỏ qua bước kiểm tra an toàn khi vội hoàn thành công việc"
-                ],
-                correct: 0,
-                explanation: "Luôn tuân thủ tuyệt đối quy trình kỹ thuật an toàn và quy định vận hành đã được phê duyệt."
-            }))
-        ];
+        <!-- Màn hình Quiz -->
+        <div id="view-quiz" class="hidden">
+            <div class="flex justify-between items-center mb-6 text-sm font-semibold text-slate-500">
+                <span>Câu <span id="lbl-curr" class="text-blue-600 font-bold text-lg">1</span> / <span id="lbl-total">10</span></span>
+                <button type="button" onclick="goHome()" class="text-rose-600 hover:underline cursor-pointer"><i class="fas fa-sign-out-alt"></i> Thoát</button>
+            </div>
 
-        let state = { mode: 'practice', count: 10, activeQ: [], index: 0, answers: {}, seconds: 0, timer: null };
+            <h2 id="lbl-question" class="text-lg md:text-xl font-bold text-slate-800 mb-6 leading-relaxed"></h2>
 
-        function setMode(m) {
-            state.mode = m;
-            if (m === 'practice') {
-                document.getElementById('card-practice').className = "border-2 border-blue-500 bg-blue-50/30 rounded-xl p-5 cursor-pointer transition-all";
-                document.getElementById('card-exam').className = "border-2 border-slate-200 bg-slate-50 rounded-xl p-5 cursor-pointer transition-all";
-                document.getElementById('rad-practice').checked = true;
-            } else {
-                document.getElementById('card-exam').className = "border-2 border-blue-500 bg-blue-50/30 rounded-xl p-5 cursor-pointer transition-all";
-                document.getElementById('card-practice').className = "border-2 border-slate-200 bg-slate-50 rounded-xl p-5 cursor-pointer transition-all";
-                document.getElementById('rad-exam').checked = true;
-            }
-        }
+            <div id="box-options" class="space-y-3 mb-6"></div>
 
-        function setCount(c) {
-            state.count = c;
-            ['10', '20', '50', 'all'].forEach(val => {
-                let btn = document.getElementById(`btn-c-${val}`);
-                if (btn) {
-                    btn.className = "count-btn px-5 py-2.5 rounded-lg border-2 border-slate-300 font-semibold text-slate-700";
-                }
-            });
-            let activeBtn = document.getElementById(`btn-c-${c}`);
-            if (activeBtn) {
-                activeBtn.className = "count-btn px-5 py-2.5 rounded-lg border-2 border-blue-600 font-semibold bg-blue-50 text-blue-600";
-            }
-        }
+            <div id="box-feedback" class="hidden p-4 rounded-xl mb-6 text-sm font-medium"></div>
 
-        function startQuiz() {
-            let list = [...questionBank].sort(() => Math.random() - 0.5);
-            if (state.count !== 'all') {
-                list = list.slice(0, parseInt(state.count));
-            }
-            state.activeQ = list;
-            state.index = 0;
-            state.answers = {};
-            state.seconds = 0;
-
-            document.getElementById('setup-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.remove('hidden');
-            document.getElementById('total-q-num').textContent = state.activeQ.length;
-
-            if (state.mode === 'exam') {
-                document.getElementById('timer-box').classList.remove('hidden');
-                clearInterval(state.timer);
-                state.timer = setInterval(() => {
-                    state.seconds++;
-                    let m = String(Math.floor(state.seconds / 60)).padStart(2, '0');
-                    let s = String(state.seconds % 60).padStart(2, '0');
-                    document.getElementById('timer').textContent = `${m}:${s}`;
-                }, 1000);
-            } else {
-                document.getElementById('timer-box').classList.add('hidden');
-            }
-            loadQ();
-        }
-
-        function loadQ() {
-            let q = state.activeQ[state.index];
-            document.getElementById('current-q-num').textContent = state.index + 1;
-            document.getElementById('question-text').textContent = `${state.index + 1}. ${q.question}`;
-            
-            let container = document.getElementById('options-container');
-            container.innerHTML = '';
-            let expBox = document.getElementById('explanation-box');
-            expBox.classList.add('hidden');
-
-            let userAns = state.answers[state.index];
-
-            q.options.forEach((opt, idx) => {
-                let div = document.createElement('div');
-                let extra = '';
-                let disabled = (state.mode === 'practice' && userAns !== undefined);
-
-                if (state.mode === 'practice' && userAns !== undefined) {
-                    if (idx === q.correct) extra = 'correct-answer font-semibold';
-                    else if (userAns === idx) extra = 'wrong-answer font-semibold';
-                } else if (userAns === idx) {
-                    extra = 'option-selected';
-                }
-
-                div.innerHTML = `
-                    <label class="option-label block p-4 border-2 rounded-xl flex items-center gap-3 ${extra}">
-                        <input type="radio" name="ans" value="${idx}" class="w-5 h-5 text-blue-600 pointer-events-none" ${userAns === idx ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
-                        <span class="w-7 h-7 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-sm text-slate-500 shrink-0 bg-white">${String.fromCharCode(65 + idx)}</span>
-                        <span class="text-slate-700 flex-grow pointer-events-none">${opt}</span>
-                    </label>
-                `;
-                div.querySelector('label').onclick = () => {
-                    if (state.mode === 'practice' && userAns !== undefined) return;
-                    state.answers[state.index] = idx;
-                    loadQ();
-                };
-                container.appendChild(div);
-            });
-
-            if (state.mode === 'practice' && userAns !== undefined) {
-                expBox.classList.remove('hidden');
-                let isCorrect = (userAns === q.correct);
-                expBox.className = `p-4 rounded-xl mb-6 border text-sm leading-relaxed ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'}`;
-                document.getElementById('explanation-text').textContent = q.explanation;
-            }
-
-            document.getElementById('prev-btn').disabled = (state.index === 0);
-            let isLast = (state.index === state.activeQ.length - 1);
-            document.getElementById('next-btn').classList.toggle('hidden', isLast);
-            document.getElementById('submit-btn').classList.toggle('hidden', !isLast);
-        }
-
-        function prevQ() {
-            if (state.index > 0) { state.index--; loadQ(); }
-        }
-
-        function nextQ() {
-            if (state.index < state.activeQ.length - 1) { state.index++; loadQ(); }
-        }
-
-        function exitQuiz() {
-            if (confirm('Bạn có muốn thoát?')) {
-                clearInterval(state.timer);
-                document.getElementById('quiz-screen').classList.add('hidden');
-                document.getElementById('setup-screen').classList.remove('hidden');
-            }
-        }
-
-        function submitQuiz() {
-            clearInterval(state.timer);
-            let score = 0;
-            state.activeQ.forEach((q, i) => { if (state.answers[i] === q.correct) score++; });
-            let percent = Math.round((score / state.activeQ.length) * 100);
-
-            document.getElementById('score-text').textContent = `${score}/${state.activeQ.length}`;
-            document.getElementById('percentage-text').textContent = `${percent}%`;
-            
-            let m = String(Math.floor(state.seconds / 60)).padStart(2, '0');
-            let s = String(state.seconds % 60).padStart(2, '0');
-            document.getElementById('time-taken-text').textContent = (state.mode === 'exam') ? `${m}:${s}` : '--:--';
-
-            let reviewList = document.getElementById('review-list');
-            reviewList.innerHTML = '';
-            state.activeQ.forEach((q, i) => {
-                let uAns = state.answers[i];
-                let correct = (uAns === q.correct);
-                let div = document.createElement('div');
-                div.className = `p-4 rounded-xl border ${correct ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/50 border-rose-200'}`;
-                div.innerHTML = `
-                    <div class="font-bold text-slate-800 mb-2">Câu ${i + 1}: ${q.question}</div>
-                    <div class="text-sm space-y-1 pl-4">
-                        <p>Bạn chọn: <span class="font-semibold ${correct ? 'text-emerald-700' : 'text-rose-700'}">${uAns !== undefined ? q.options[uAns] : 'Chưa trả lời'}</span></p>
-                        ${!correct ? `<p class="text-emerald-700 font-semibold">Đáp án đúng: ${q.options[q.correct]}</p>` : ''}
-                    </div>
-                `;
-                reviewList.appendChild(div);
-            });
-
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-        }
-
-        function resetToSetup() {
-            document.getElementById('result-screen').classList.add('hidden');
-            document.getElementById('setup-screen').classList.remove('hidden');
-        }
-    </script>
-</body>
-</html>
+            <div class="flex justify-between pt-4 border-t border-slate-200">
+                <button type="button" id="btn-prev" onclick="moveQ(-1)" class="px-5 py-2.5 rounded-xl border-2 border-slate-300 font-bold text-slate-700 hover:bg-slate-100 cursor-pointer">
+                    <i class="fas fa-arrow-left mr-1"></i> Trước
+                </button>
+                <button type="button" id="btn-next" onclick="moveQ(1)" class="px-6 py-2.5 bg-blue-
