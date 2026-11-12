@@ -365,6 +365,7 @@
                 currentIndex,
                 userAnswers,
                 secondsElapsed,
+                remainingSeconds: (currentMode === 'exam' ? remainingSeconds : 0),
                 candidateInfo,
                 inQuiz: true
             };
@@ -374,6 +375,9 @@
         function clearQuizState() {
             localStorage.removeItem('tracnghiem_antoan_state');
         }
+
+        let totalSecondsAllowed = 0;
+        let remainingSeconds = 0;
 
         function startQuiz() {
             let pool = [...getQuestionsByTopic(currentTopic)].sort(() => Math.random() - 0.5);
@@ -385,15 +389,36 @@
             userAnswers = {};
             secondsElapsed = 0;
 
+            // Nếu là chế độ Thi Thử (exam): Thời gian làm bài = số lượng câu hỏi (tính bằng phút -> đổi ra giây)
+            if (currentMode === 'exam') {
+                totalSecondsAllowed = activeQuestions.length * 60;
+                remainingSeconds = totalSecondsAllowed;
+            } else {
+                secondsElapsed = 0;
+            }
+
             saveQuizState();
 
             clearInterval(timerInterval);
-            document.getElementById('lbl-timer').textContent = "00:00";
+            updateTimerDisplay();
+
             timerInterval = setInterval(() => {
-                secondsElapsed++;
-                document.getElementById('lbl-timer').textContent = formatTime(secondsElapsed);
-                // Lưu thời gian ngầm mỗi giây
-                saveQuizState();
+                if (currentMode === 'exam') {
+                    if (remainingSeconds > 0) {
+                        remainingSeconds--;
+                        saveQuizState();
+                        updateTimerDisplay();
+                        if (remainingSeconds <= 0) {
+                            clearInterval(timerInterval);
+                            alert("Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài.");
+                            submitQuiz();
+                        }
+                    }
+                } else {
+                    secondsElapsed++;
+                    updateTimerDisplay();
+                    saveQuizState();
+                }
             }, 1000);
 
             document.getElementById('lbl-active-topic').textContent = topicNames[currentTopic];
@@ -401,6 +426,14 @@
             document.getElementById('view-quiz').classList.remove('hidden');
             document.getElementById('lbl-total').textContent = activeQuestions.length;
             renderQuestion();
+        }
+
+        function updateTimerDisplay() {
+            if (currentMode === 'exam') {
+                document.getElementById('lbl-timer').textContent = formatTime(remainingSeconds);
+            } else {
+                document.getElementById('lbl-timer').textContent = formatTime(secondsElapsed);
+            }
         }
 
         function chooseOption(oIdx) {
@@ -614,11 +647,38 @@
             selectMode(currentMode);
             selectCount(currentCount);
 
+            // Xử lý lại biến thời gian khi khôi phục
+            if (currentMode === 'exam') {
+                if (typeof savedStateData.remainingSeconds !== 'undefined') {
+                    remainingSeconds = savedStateData.remainingSeconds;
+                } else {
+                    totalSecondsAllowed = activeQuestions.length * 60;
+                    remainingSeconds = totalSecondsAllowed - (savedStateData.secondsElapsed || 0);
+                }
+            } else {
+                secondsElapsed = savedStateData.secondsElapsed || 0;
+            }
+
             clearInterval(timerInterval);
+            updateTimerDisplay();
+
             timerInterval = setInterval(() => {
-                secondsElapsed++;
-                document.getElementById('lbl-timer').textContent = formatTime(secondsElapsed);
-                saveQuizState();
+                if (currentMode === 'exam') {
+                    if (remainingSeconds > 0) {
+                        remainingSeconds--;
+                        saveQuizState();
+                        updateTimerDisplay();
+                        if (remainingSeconds <= 0) {
+                            clearInterval(timerInterval);
+                            alert("Đã hết thời gian làm bài! Hệ thống sẽ tự động nộp bài.");
+                            submitQuiz();
+                        }
+                    }
+                } else {
+                    secondsElapsed++;
+                    updateTimerDisplay();
+                    saveQuizState();
+                }
             }, 1000);
 
             document.getElementById('lbl-active-topic').textContent = topicNames[currentTopic];
