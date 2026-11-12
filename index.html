@@ -183,6 +183,25 @@
 
     </div>
 
+    <!-- Hộp thoại khôi phục bài thi khi sập nguồn / mất kết nối -->
+    <div id="restore-modal" class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-100">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl mx-auto mb-4 bg-blue-100 text-blue-600">
+                <i class="fas fa-history"></i>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-800 mb-2">Phát hiện bài làm chưa hoàn thành</h3>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">Hệ thống ghi nhận bạn đang làm dở một bài thi trước đó. Bạn có muốn tiếp tục làm tiếp không?</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="discardRestore()" class="py-2.5 px-4 rounded-xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 font-bold text-slate-700 cursor-pointer">
+                    Làm mới <span class="block text-[10px] font-normal text-slate-500">(Xóa bài cũ)</span>
+                </button>
+                <button type="button" onclick="confirmRestore()" class="py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 font-bold text-white shadow cursor-pointer">
+                    Tiếp tục <span class="block text-[10px] font-normal text-blue-100">(Khôi phục)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Hộp thoại cảnh báo thiếu thông tin thí sinh -->
     <div id="candidate-warning-modal" class="hidden fixed inset-0 bg-slate-900/60 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-100">
@@ -337,6 +356,25 @@
             }
         }
 
+        function saveQuizState() {
+            const state = {
+                currentTopic,
+                currentMode,
+                currentCount,
+                activeQuestions,
+                currentIndex,
+                userAnswers,
+                secondsElapsed,
+                candidateInfo,
+                inQuiz: true
+            };
+            localStorage.setItem('tracnghiem_antoan_state', JSON.stringify(state));
+        }
+
+        function clearQuizState() {
+            localStorage.removeItem('tracnghiem_antoan_state');
+        }
+
         function startQuiz() {
             let pool = [...getQuestionsByTopic(currentTopic)].sort(() => Math.random() - 0.5);
             if (currentCount !== 'all') {
@@ -347,11 +385,15 @@
             userAnswers = {};
             secondsElapsed = 0;
 
+            saveQuizState();
+
             clearInterval(timerInterval);
             document.getElementById('lbl-timer').textContent = "00:00";
             timerInterval = setInterval(() => {
                 secondsElapsed++;
                 document.getElementById('lbl-timer').textContent = formatTime(secondsElapsed);
+                // Lưu thời gian ngầm mỗi giây
+                saveQuizState();
             }, 1000);
 
             document.getElementById('lbl-active-topic').textContent = topicNames[currentTopic];
@@ -363,6 +405,7 @@
 
         function chooseOption(oIdx) {
             userAnswers[currentIndex] = oIdx;
+            saveQuizState();
             renderQuestion();
         }
 
@@ -421,6 +464,7 @@
 
         function goHome() {
             clearInterval(timerInterval);
+            clearQuizState();
             document.getElementById('view-quiz').classList.add('hidden');
             document.getElementById('view-result').classList.add('hidden');
             document.getElementById('view-setup').classList.remove('hidden');
@@ -428,11 +472,33 @@
 
         function submitQuiz() {
             clearInterval(timerInterval);
+            clearQuizState();
             let score = 0;
             activeQuestions.forEach((q, i) => {
                 if (userAnswers[i] === q.correct) score++;
             });
             let point10 = ((score / activeQuestions.length) * 10).toFixed(1);
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzmXwS6HACipj65qcxerDbYBU7TzBPOVlEVlO0nZQQBglvhaen_U6H5byTDLYZzfoQR5g/exec';
+            const payload = {
+                name: candidateInfo.name || '',
+                dob: candidateInfo.dob || '',
+                dept: candidateInfo.dept || '',
+                title: candidateInfo.title || '',
+                topic: topicNames[currentTopic] || '',
+                point: point10,
+                score: score + '/' + activeQuestions.length,
+                duration: formatTime(secondsElapsed)
+            };
+            if (scriptURL && currentMode === 'exam') {
+                fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(err => console.error('Lỗi gửi dữ liệu:', err));
+            }
 
             document.getElementById('res-topic-name').textContent = "Chủ đề: " + topicNames[currentTopic];
             document.getElementById('res-c-name').textContent = candidateInfo.name || '(Chưa nhập)';
@@ -507,7 +573,68 @@
             window.print();
         }
 
+
+        let savedStateData = null;
+
+        function checkSavedState() {
+            const raw = localStorage.getItem('tracnghiem_antoan_state');
+            if (raw) {
+                try {
+                    const st = JSON.parse(raw);
+                    if (st && st.inQuiz && st.activeQuestions && st.activeQuestions.length > 0) {
+                        savedStateData = st;
+                        document.getElementById('restore-modal').classList.remove('hidden');
+                    }
+                } catch(e) {
+                    localStorage.removeItem('tracnghiem_antoan_state');
+                }
+            }
+        }
+
+        function confirmRestore() {
+            document.getElementById('restore-modal').classList.add('hidden');
+            if (!savedStateData) return;
+
+            currentTopic = savedStateData.currentTopic;
+            currentMode = savedStateData.currentMode;
+            currentCount = savedStateData.currentCount;
+            activeQuestions = savedStateData.activeQuestions;
+            currentIndex = savedStateData.currentIndex;
+            userAnswers = savedStateData.userAnswers || {};
+            secondsElapsed = savedStateData.secondsElapsed || 0;
+            candidateInfo = savedStateData.candidateInfo || { name: '', dob: '', dept: '', title: '' };
+
+            // Khôi phục form thông tin thí sinh nếu có
+            if (candidateInfo.name) document.getElementById('candidate-name').value = candidateInfo.name;
+            if (candidateInfo.dob) document.getElementById('candidate-dob').value = candidateInfo.dob;
+            if (candidateInfo.dept) document.getElementById('candidate-dept').value = candidateInfo.dept;
+            if (candidateInfo.title) document.getElementById('candidate-title').value = candidateInfo.title;
+
+            selectTopic(currentTopic);
+            selectMode(currentMode);
+            selectCount(currentCount);
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                document.getElementById('lbl-timer').textContent = formatTime(secondsElapsed);
+                saveQuizState();
+            }, 1000);
+
+            document.getElementById('lbl-active-topic').textContent = topicNames[currentTopic];
+            document.getElementById('view-setup').classList.add('hidden');
+            document.getElementById('view-quiz').classList.remove('hidden');
+            document.getElementById('lbl-total').textContent = activeQuestions.length;
+            renderQuestion();
+        }
+
+        function discardRestore() {
+            document.getElementById('restore-modal').classList.add('hidden');
+            clearQuizState();
+        }
+
         updateTopicMaxLabel();
+        checkSavedState();
     </script>
 </body>
 </html>
