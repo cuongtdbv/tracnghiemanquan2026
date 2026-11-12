@@ -379,8 +379,20 @@
         let totalSecondsAllowed = 0;
         let remainingSeconds = 0;
 
+        // Thuật toán trộn ngẫu nhiên chuẩn Fisher-Yates trên toàn bộ ngân hàng câu hỏi của chủ đề
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
         function startQuiz() {
-            let pool = [...getQuestionsByTopic(currentTopic)].sort(() => Math.random() - 0.5);
+            // Lấy toàn bộ câu hỏi thuộc chủ đề chuyên môn đã chọn và xáo trộn ngẫu nhiên hoàn toàn
+            let topicQuestions = getQuestionsByTopic(currentTopic);
+            let pool = shuffleArray(topicQuestions);
             if (currentCount !== 'all') {
                 pool = pool.slice(0, parseInt(currentCount));
             }
@@ -394,7 +406,8 @@
                 totalSecondsAllowed = activeQuestions.length * 60;
                 remainingSeconds = totalSecondsAllowed;
             } else {
-                secondsElapsed = 0;
+                totalSecondsAllowed = 0;
+                remainingSeconds = 0;
             }
 
             saveQuizState();
@@ -403,6 +416,7 @@
             updateTimerDisplay();
 
             timerInterval = setInterval(() => {
+                secondsElapsed++;
                 if (currentMode === 'exam') {
                     if (remainingSeconds > 0) {
                         remainingSeconds--;
@@ -415,7 +429,6 @@
                         }
                     }
                 } else {
-                    secondsElapsed++;
                     updateTimerDisplay();
                     saveQuizState();
                 }
@@ -511,6 +524,7 @@
                 if (userAnswers[i] === q.correct) score++;
             });
             let point10 = ((score / activeQuestions.length) * 10).toFixed(1);
+            let actualDurationSec = (currentMode === 'exam') ? Math.max(secondsElapsed, totalSecondsAllowed - remainingSeconds) : secondsElapsed;
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzmXwS6HACipj65qcxerDbYBU7TzBPOVlEVlO0nZQQBglvhaen_U6H5byTDLYZzfoQR5g/exec';
             const payload = {
@@ -521,7 +535,7 @@
                 topic: topicNames[currentTopic] || '',
                 point: point10,
                 score: score + '/' + activeQuestions.length,
-                duration: formatTime(secondsElapsed)
+                duration: formatTime(actualDurationSec)
             };
             if (scriptURL && currentMode === 'exam') {
                 fetch(scriptURL, {
@@ -541,7 +555,7 @@
 
             document.getElementById('res-point').textContent = point10;
             document.getElementById('res-score').textContent = `${score}/${activeQuestions.length}`;
-            document.getElementById('res-time').textContent = formatTime(secondsElapsed);
+            document.getElementById('res-time').textContent = formatTime(actualDurationSec);
 
             let listEl = document.getElementById('res-list');
             listEl.innerHTML = '';
@@ -648,12 +662,14 @@
             selectCount(currentCount);
 
             // Xử lý lại biến thời gian khi khôi phục
+            totalSecondsAllowed = activeQuestions.length * 60;
             if (currentMode === 'exam') {
                 if (typeof savedStateData.remainingSeconds !== 'undefined') {
                     remainingSeconds = savedStateData.remainingSeconds;
+                    secondsElapsed = savedStateData.secondsElapsed || Math.max(0, totalSecondsAllowed - remainingSeconds);
                 } else {
-                    totalSecondsAllowed = activeQuestions.length * 60;
-                    remainingSeconds = totalSecondsAllowed - (savedStateData.secondsElapsed || 0);
+                    secondsElapsed = savedStateData.secondsElapsed || 0;
+                    remainingSeconds = Math.max(0, totalSecondsAllowed - secondsElapsed);
                 }
             } else {
                 secondsElapsed = savedStateData.secondsElapsed || 0;
@@ -663,6 +679,7 @@
             updateTimerDisplay();
 
             timerInterval = setInterval(() => {
+                secondsElapsed++;
                 if (currentMode === 'exam') {
                     if (remainingSeconds > 0) {
                         remainingSeconds--;
@@ -675,7 +692,6 @@
                         }
                     }
                 } else {
-                    secondsElapsed++;
                     updateTimerDisplay();
                     saveQuizState();
                 }
